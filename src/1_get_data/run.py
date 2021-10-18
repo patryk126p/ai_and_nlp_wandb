@@ -7,7 +7,7 @@ import os
 import pickle
 
 import torchvision
-from torch import nn, optim
+import wandb
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 
@@ -16,8 +16,8 @@ logger = logging.getLogger()
 
 
 def go(args):
-    # run = wandb.init(job_type="download")
-    # run.config.update(args)
+    run = wandb.init(job_type="download")
+    run.config.update(args)
     logger.info(f"Downloading {args.dataset}")
     dataset_class = getattr(torchvision.datasets, args.dataset)
     transforms = T.Compose([T.ToTensor(), T.Normalize((0.5,), (0.5,))])
@@ -35,35 +35,15 @@ def go(args):
     with open(file_path, "wb") as fh:
         pickle.dump(data, fh)
 
-    model = nn.Sequential(nn.Linear(28 * 28, 10), nn.LogSoftmax(dim=1))
-    criterion = nn.NLLLoss()
-    learning_rate = 0.005
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    n_epochs = 5
-
-    for epoch in range(n_epochs):
-        losses = []
-        for imgs, labels in train_loader:
-            batch_size = imgs.shape[0]
-            outputs = model(imgs.reshape(batch_size, -1))
-            loss = criterion(outputs, labels)
-            losses.append(loss.item())
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-        print(f"Epoch: {epoch}; loss: {sum(losses) / len(losses)}")
-
-    # logger.info(f"Uploading {args.artifact_name} to artifact store")
-    # artifact = wandb.Artifact(
-    #     args.artifact_name,
-    #     type=args.artifact_type,
-    #     description=args.artifact_description,
-    # )
-    # artifact.add_file(file_path)
-    # run.log_artifact(artifact)
-    # artifact.wait()
+    logger.info(f"Uploading {args.artifact_name} to artifact store")
+    artifact = wandb.Artifact(
+        args.artifact_name,
+        type=args.artifact_type,
+        description=args.artifact_description,
+    )
+    artifact.add_file(file_path)
+    run.log_artifact(artifact)
+    artifact.wait()
 
 
 if __name__ == "__main__":
