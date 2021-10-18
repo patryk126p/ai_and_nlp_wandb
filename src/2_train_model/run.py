@@ -72,7 +72,7 @@ def go(args):
 
     model_path = os.path.join("model", args.model_name)
     logger.info(f"Saving model to {model_path}")
-    torch.save(model, model_path)
+    torch.save(model.state_dict(), model_path)
     logger.info(f"Uploading {args.model_name} to artifact store")
     artifact = wandb.Artifact(
         args.model_name,
