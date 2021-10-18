@@ -1,0 +1,28 @@
+name: download_dataset
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      dataset:
+        description: Name of torchvision class for downloading dataset
+        type: string
+
+      batch_size:
+        description: Batch size for DataLoader
+        type: float
+
+      artifact_name:
+        description: Dataset name
+        type: string
+
+      artifact_type:
+        description: Dataset type
+        type: string
+
+      artifact_description:
+        description: Dataset description
+        type: string
+
+    command: "python run.py {dataset} {batch_size} {artifact_name} {artifact_type} {artifact_description}"

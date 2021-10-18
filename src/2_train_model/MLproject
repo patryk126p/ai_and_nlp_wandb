@@ -1,0 +1,21 @@
+name: train_model
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      train_data:
+        description: Train dataset artifact
+        type: string
+
+      model_config:
+        description: Path to json with model configuration
+        type: string
+
+      model_name:
+        description: Name of model artifact
+        type: string
+
+    command: >-
+      python run.py {train_data} {model_config} {model_name}
