@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 
 def go(args):
-    run = wandb.init(job_type="train")
+    run = wandb.init(job_type="train", save_code=True)
     run.config.update(args)
 
     logger.info(f"Reading train data: {args.train_data}")

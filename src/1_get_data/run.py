@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 
 def go(args):
-    run = wandb.init(job_type="download")
+    run = wandb.init(job_type="download", save_code=True)
     run.config.update(args)
     logger.info(f"Downloading {args.dataset}")
     dataset_class = getattr(torchvision.datasets, args.dataset)
